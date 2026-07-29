@@ -1,3 +1,12 @@
+-- Execute in order:
+-- 1. Create_PartitioningLog_Table.sql
+-- 2. sp_ConvertToPartitionedTable_Enhanced.sql
+-- 3. sp_AddFuturePartitions.sql
+-- 4. sp_CheckPartitionHealth.sql
+-- 5. sp_PartitionPerformanceReport.sql
+-- 6. sp_RestoreForeignKeys.sql
+-- 7. sp_ValidatePartitionSetup.sql
+
 USE [DBADB]
 GO
 
