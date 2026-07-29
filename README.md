@@ -175,43 +175,71 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DryRun = 1;
 ```
 
-Key Capabilities
-Complete Preview: Shows every step before execution
+SQL Server Partitioning System - Key Capabilities & Benefits
+🎯 Key Capabilities
+📋 Complete Preview
+Shows every step before execution, giving you full transparency of the entire partitioning process.
 
-Time Estimation: Provides duration estimates based on data size
+⏱️ Time Estimation
+Provides duration estimates based on data size, helping you plan maintenance windows effectively.
 
-SQL Preview: Displays actual SQL that will be executed
+🔍 SQL Preview
+Displays actual SQL that will be executed, allowing you to review and validate the exact operations.
 
-Warning Detection: Identifies potential issues
+⚠️ Warning Detection
+Identifies potential issues before they occur, preventing surprises during execution.
 
-Multiple Output Formats: TABLE, XML, JSON
+📊 Multiple Output Formats
+Supports TABLE, XML, and JSON formats for flexible integration with various tools and reporting needs.
 
-Persistent Results: Stores results for later review
+💾 Persistent Results
+Stores results for later review, enabling historical analysis and audit trails.
 
-Comparison Tools: Compare dry run estimates with actual execution
+📈 Comparison Tools
+Compare dry run estimates with actual execution to refine future predictions and optimize performance.
 
-Benefits
-Risk Reduction: Understand impact before making changes
+✨ Benefits
+🛡️ Risk Reduction
+Understand the complete impact before making changes, minimizing production risks.
 
-Planning: Better resource and time planning
+📅 Better Planning
+Improved resource allocation and time management through accurate estimates.
 
-Validation: Verify approach before execution
+✅ Validation
+Verify your approach and configuration before committing to execution.
 
-Documentation: Record of expected outcomes
+📝 Documentation
+Automatic record of expected outcomes, creating valuable project documentation.
 
-Troubleshooting: Identify issues early
+🔧 Troubleshooting
+Identify issues early in the process, reducing debugging time during actual execution.
 
-Education: Learn about the partitioning process
+📚 Education
+Learn about the partitioning process through detailed step-by-step previews.
 
-Use Cases
-Production Migration: Validate before making changes
+💼 Use Cases
+🏢 Production Migration
+Validate and plan before making changes to production environments, ensuring smooth transitions.
 
-Performance Testing: Estimate time and resources
+⚡ Performance Testing
+Estimate time and resource requirements for different scenarios and data volumes.
 
-Configuration Testing: Compare different approaches
+🔄 Configuration Testing
+Compare different partitioning approaches and configurations side by side.
 
-Audit Trail: Document planned changes
+📋 Audit Trail
+Document planned changes with comprehensive execution plans and estimates.
 
-Team Review: Share plans with team members
+👥 Team Review
+Share detailed execution plans with team members for collaborative review and approval.
 
-Capacity Planning: Estimate resource requirements
+📊 Capacity Planning
+Estimate resource requirements and storage needs for future growth.
+
+🎨 Quick Reference
+Feature	Benefit	Use Case
+🔍 Complete Preview	🛡️ Risk Reduction	🏢 Production Migration
+⏱️ Time Estimation	📅 Better Planning	⚡ Performance Testing
+📊 Multiple Formats	📝 Documentation	👥 Team Review
+⚠️ Warning Detection	🔧 Troubleshooting	🔄 Configuration Testing
+💾 Persistent Results	📋 Audit Trail	📊 Capacity Planning
