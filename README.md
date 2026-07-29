@@ -177,25 +177,41 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
 
 Key Capabilities
 Complete Preview: Shows every step before execution
+
 Time Estimation: Provides duration estimates based on data size
+
 SQL Preview: Displays actual SQL that will be executed
+
 Warning Detection: Identifies potential issues
+
 Multiple Output Formats: TABLE, XML, JSON
+
 Persistent Results: Stores results for later review
+
 Comparison Tools: Compare dry run estimates with actual execution
 
 Benefits
 Risk Reduction: Understand impact before making changes
+
 Planning: Better resource and time planning
+
 Validation: Verify approach before execution
+
 Documentation: Record of expected outcomes
+
 Troubleshooting: Identify issues early
+
 Education: Learn about the partitioning process
 
 Use Cases
 Production Migration: Validate before making changes
+
 Performance Testing: Estimate time and resources
+
 Configuration Testing: Compare different approaches
+
 Audit Trail: Document planned changes
+
 Team Review: Share plans with team members
+
 Capacity Planning: Estimate resource requirements
