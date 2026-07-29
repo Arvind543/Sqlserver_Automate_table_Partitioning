@@ -1,0 +1,12 @@
+SQL_Server_Partitioning_System/
+├── 📄 01_Create_DBADB_Database.sql
+├── 📄 02_Create_Partitioning_Tables.sql
+├── 📄 03_Main_Partitioning_Procedure.sql
+├── 📄 04_Helper_Procedures.sql
+├── 📄 05_User_Grants_Permissions.sql
+├── 📄 06_Test_Examples.sql
+├── 📄 07_DryRun_Helper_Functions.sql
+├── 📄 08_Monitoring_Queries.sql
+├── 📄 09_Maintenance_Procedures.sql
+├── 📄 10_Complete_Deployment.sql
+└── 📄 README.md

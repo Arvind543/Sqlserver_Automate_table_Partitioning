@@ -1,123 +1,104 @@
-# Dry Run Mode
+# 🚀 SQL Server Advanced Partitioning Management System
 
-## Table of Contents
-- [Quick Start](#quick-start)
-- [Dry Run Parameters](#dry-run-parameters)
-- [Quick Queries](#quick-queries)
-- [Best Practices](#best-practices)
-- [Scenarios](#scenarios)
-
-## Quick Start
-A concise guide to preview and validate partitioning operations before executing them.
-
-1. Run a dry run to preview steps and SQL without making changes:
-
-```sql
-EXEC DBADB.dbo.sp_ConvertToPartitionedTable
-    @DatabaseName = 'SalesDB',
-    @TableName = 'Orders',
-    @PartitionColumn = 'OrderDate',
-    @DryRun = 1;
-```
-
-2. View the generated SQL for review:
-
-```sql
-SELECT
-    StepName,
-    SQLToExecute
-FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id'
-  AND SQLToExecute IS NOT NULL
-ORDER BY StepOrder;
-```
-
-3. Get an overall time estimate:
-
-```sql
-SELECT
-    SUM(EstimatedDurationSeconds) AS TotalEstimatedSeconds,
-    SUM(EstimatedDurationSeconds) / 60 AS TotalEstimatedMinutes,
-    COUNT(*) AS TotalSteps,
-    COUNT(CASE WHEN Warnings IS NOT NULL AND Warnings <> '' THEN 1 END) AS WarningCount
-FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id';
-```
-
-4. Export dry run results as XML/JSON if needed:
-
-```sql
--- XML
-EXEC DBADB.dbo.sp_ConvertToPartitionedTable
-    @DatabaseName = 'SalesDB',
-    @TableName = 'Orders',
-    @PartitionColumn = 'OrderDate',
-    @DryRun = 1,
-    @DryRunOutputFormat = 'XML';
-
--- JSON
-EXEC DBADB.dbo.sp_ConvertToPartitionedTable
-    @DatabaseName = 'SalesDB',
-    @TableName = 'Orders',
-    @PartitionColumn = 'OrderDate',
-    @DryRun = 1,
-    @DryRunOutputFormat = 'JSON';
-```
-
-## Dry Run Parameters
-- @DryRun: 0 = actual run, 1 = dry run
-- @DryRunOutputFormat: TABLE, XML, JSON
-
-## Quick Queries
-- Check warnings count:
-
-```sql
-SELECT COUNT(*) AS WarningCount
-FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id'
-  AND Warnings IS NOT NULL
-  AND Warnings <> '';
-```
-
-- Check foreign-key related steps:
-
-```sql
-SELECT COUNT(*) AS FKCount
-FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id'
-  AND StepName LIKE '%FOREIGN_KEY%';
-```
-
-## Best Practices
-- Always run a dry run first.
-- Review all generated SQL before executing.
-- Address warnings and test in staging.
-- Save dry run results for audit and planning.
-
-## Scenarios (Examples)
-- Large table with many constraints:
-
-```sql
-EXEC DBADB.dbo.sp_ConvertToPartitionedTable
-    @DatabaseName = 'SalesDB',
-    @TableName = 'LargeOrders',
-    @PartitionColumn = 'OrderDate',
-    @NumberOfExistingPartitions = 24,
-    @PreserveForeignKeys = 1,
-    @DryRun = 1;
-```
-
-- Performance-critical table with batch sizing:
-
-```sql
-EXEC DBADB.dbo.sp_ConvertToPartitionedTable
-    @DatabaseName = 'SalesDB',
-    @TableName = 'TransactionLog',
-    @PartitionColumn = 'CreatedDate',
-    @BatchSize = 50000,
-    @DryRun = 1;
-```
+## Complete Table Partitioning Solution with Dry-Run Support
 
 ---
 
-If you want, I can also add a short "Full Reference" section below the quick-start that preserves the original longer explanations and the full list of DryRunResult columns. Say the word and I will append it in the next commit.
+## 📋 Table of Contents
+
+1. [Overview](#-overview)
+2. [Features](#-features)
+3. [System Requirements](#-system-requirements)
+4. [Installation Guide](#-installation-guide)
+5. [Configuration](#-configuration)
+6. [Usage Guide](#-usage-guide)
+7. [Dry Run Mode](#-dry-run-mode)
+8. [Monitoring](#-monitoring)
+9. [Maintenance](#-maintenance)
+10. [Troubleshooting](#-troubleshooting)
+11. [Security](#-security)
+12. [Best Practices](#-best-practices)
+13. [Performance Tips](#-performance-tips)
+14. [FAQ](#-faq)
+
+---
+
+## 📖 Overview
+
+The **SQL Server Advanced Partitioning Management System** is a comprehensive solution for automatically converting existing tables to partitioned tables with complete schema preservation. It includes:
+
+- ✅ **Full Schema Preservation**: Foreign keys, defaults, check constraints, indexes, and extended properties
+- 🔬 **Dry Run Mode**: Preview all operations before execution
+- 📊 **Monitoring & Alerting**: Real-time monitoring of partition operations
+- 🔧 **Automated Maintenance**: SQL Agent jobs for future partition management
+- 📈 **Performance Reporting**: Detailed reports and analytics
+
+---
+
+## ✨ Features
+
+### Core Features
+- **🎯 Automatic Partition Conversion**: Convert any table to a partitioned table
+- **🧠 Intelligent Partitioning**: Automatically detects data types (date/time or integer)
+- **🔗 Complete Schema Preservation**: Handles all constraints, defaults, and keys
+- **🔬 Dry Run Mode**: Preview and validate before execution
+- **📊 Progress Tracking**: Real-time progress with detailed logging
+- **🤖 Automated Maintenance**: Creates SQL Agent jobs for future partitions
+
+### Advanced Features
+- **🔗 Foreign Key Management**: Handles both inbound and outbound foreign keys
+- **📝 Default Constraint Preservation**: Retains all default value constraints
+- **✅ Check Constraint Preservation**: Maintains all check constraints
+- **📊 Index Management**: Recreates all indexes with original properties
+- **🏷️ Extended Properties**: Preserves table and column extended properties
+- **🔢 Identity Column Handling**: Properly manages identity columns
+- **📦 Batch Processing**: Efficient data movement with configurable batch sizes
+- **⚡ Parallel Operations**: Support for parallel processing where possible
+
+---
+
+## 💻 System Requirements
+
+| Component | Requirement |
+|-----------|-------------|
+| SQL Server | 2012 or higher (2019 recommended) |
+| Edition | Enterprise, Developer, or Standard (with partitioning support) |
+| SQL Agent | Running for automated jobs |
+| Memory | Minimum 4GB (8GB+ recommended for large tables) |
+| Disk Space | At least 2x the size of the largest table |
+| Permissions | Sysadmin or equivalent for installation |
+
+---
+
+## 📥 Installation Guide
+
+### Step 1: Download Files
+
+Download all SQL files from the package:
+- `01_Create_DBADB_Database.sql`
+- `02_Create_Partitioning_Tables.sql`
+- `03_Main_Partitioning_Procedure.sql`
+- `04_Helper_Procedures.sql`
+- `05_User_Grants_Permissions.sql`
+- `06_Test_Examples.sql`
+- `07_DryRun_Helper_Functions.sql`
+- `08_Monitoring_Queries.sql`
+- `09_Maintenance_Procedures.sql`
+- `10_Complete_Deployment.sql`
+
+### Step 2: Execute Deployment
+
+```sql
+-- Method 1: Execute the complete deployment script
+:r 10_Complete_Deployment.sql
+
+-- Method 2: Execute files individually in order
+:r 01_Create_DBADB_Database.sql
+:r 02_Create_Partitioning_Tables.sql
+:r 03_Main_Partitioning_Procedure.sql
+:r 04_Helper_Procedures.sql
+:r 05_User_Grants_Permissions.sql
+:r 06_Test_Examples.sql
+:r 07_DryRun_Helper_Functions.sql
+:r 08_Monitoring_Queries.sql
+:r 09_Maintenance_Procedures.sql
