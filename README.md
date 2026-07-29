@@ -524,9 +524,3 @@ A10: Yes. The system can create SQL Agent jobs for future partitions.
 ---
 
 ## 📚 Additional Resources
-
-- Examples and extended usage are included in MainPage.txt in the repository root — please refer to that file for full scenarios and sample outputs.
-
----
-
-*Updated README: merged detailed usage, examples, and guidance from MainPage.txt.*
