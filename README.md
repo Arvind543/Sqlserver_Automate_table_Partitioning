@@ -176,6 +176,7 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
 ```
 
 SQL Server Partitioning System - Key Capabilities & Benefits
+
 🎯 Key Capabilities
 📋 Complete Preview
 Shows every step before execution, giving you full transparency of the entire partitioning process.
