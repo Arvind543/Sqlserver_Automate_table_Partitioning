@@ -1,27 +1,28 @@
-## Dry Run Mode
+# Dry Run Mode
 
-### Overview
+## Overview
 The procedure includes a comprehensive dry-run mode that allows you to preview all steps, estimated durations, and potential issues before executing the actual partitioning process.
 
-### How Dry Run Works
+## How Dry Run Works
 
-1. **Step-by-Step Preview**: Shows every step that will be executed
-2. **Estimated Duration**: Provides time estimates based on table size
-3. **SQL Preview**: Shows the actual SQL that will be executed
-4. **Issue Detection**: Identifies potential problems before they occur
-5. **Resource Estimation**: Estimates row counts and batch sizes
-6. **Multiple Output Formats**: TABLE, XML, or JSON
+1. **Step-by-Step Preview**: Shows every step that will be executed.
+2. **Estimated Duration**: Provides time estimates based on table size.
+3. **SQL Preview**: Shows the actual SQL that will be executed.
+4. **Issue Detection**: Identifies potential problems before they occur.
+5. **Resource Estimation**: Estimates row counts and batch sizes.
+6. **Multiple Output Formats**: TABLE, XML, or JSON.
 
-### Dry Run Parameters
+## Dry Run Parameters
 
 | Parameter | Description | Options |
 |-----------|-------------|---------|
 | @DryRun | Enable dry run mode | 0 (Actual) or 1 (Dry Run) |
 | @DryRunOutputFormat | Output format | TABLE, XML, JSON |
 
-### Dry Run Output
+## Dry Run Output
 
 The dry run results are stored in the `dbo.DryRunResults` table with the following columns:
+
 - ExecutionID: Unique identifier for the dry run session
 - StepOrder: Order of execution
 - StepName: Name of the step
@@ -34,9 +35,9 @@ The dry run results are stored in the `dbo.DryRunResults` table with the followi
 - Status: Success, Warning, or Failed
 - CreatedDate: Timestamp
 
-### Using Dry Run Effectively
+## Using Dry Run Effectively
 
-#### 1. Validate Before Execution
+### Run a Dry Run (Validate Before Execution)
 Always run a dry run first to understand what will happen:
 
 ```sql
@@ -47,8 +48,8 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DryRun = 1;
 ```
 
-## Estimate Total Duration
-- Get overall time estimate:
+### Estimate Total Duration
+Get an overall time estimate:
 
 ```sql
 SELECT 
@@ -57,13 +58,13 @@ SELECT
     COUNT(*) AS TotalSteps,
     COUNT(CASE WHEN Warnings IS NOT NULL AND Warnings <> '' THEN 1 END) AS WarningCount
 FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id'
+WHERE ExecutionID = 'your-execution-id';
 ```
-5. View SQL to be Executed
-Preview the actual SQL statements:
+
+### View SQL to be Executed
+Preview the actual SQL statements that will run:
 
 ```sql
-
 SELECT 
     StepName,
     SQLToExecute
@@ -72,19 +73,21 @@ WHERE ExecutionID = 'your-execution-id'
   AND SQLToExecute IS NOT NULL
 ORDER BY StepOrder;
 ```
-6. Export to XML or JSON
+
+### Export Dry Run Output (XML or JSON)
 For integration with other tools:
 
-```sql
-
 -- XML Output
+
+```sql
 EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DatabaseName = 'SalesDB',
     @TableName = 'Orders',
     @PartitionColumn = 'OrderDate',
     @DryRun = 1,
-    @DryRunOutputFormat = 'XML'
+    @DryRunOutputFormat = 'XML';
 ```
+
 -- JSON Output
 
 ```sql
@@ -93,56 +96,56 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @TableName = 'Orders',
     @PartitionColumn = 'OrderDate',
     @DryRun = 1,
-    @DryRunOutputFormat = 'JSON'
+    @DryRunOutputFormat = 'JSON';
 ```
 
-Best Practices for Dry Run
-Always Run First: Run dry run before actual execution
+## Best Practices for Dry Run
 
-Review All Steps: Don't skip reviewing each step
+- Always run a dry run first.
+- Review all steps; don't skip reviewing each step.
+- Check warnings and address them before proceeding.
+- Estimate time and plan for the estimated duration.
+- Test in a staging environment first.
+- Save results for reference.
+- Compare dry runs after any parameter changes.
 
-Check Warnings: Address all warnings before proceeding
+## Common Dry Run Scenarios
 
-Estimate Time: Plan for the estimated duration
-
-Test in Staging: Use staging environment first
-
-Save Results: Keep dry run results for reference
-
-Compare Versions: Run dry runs after any parameter changes
-
-Common Dry Run Scenarios
-Scenario 1: Large Table with Many Constraints
+### Scenario 1: Large Table with Many Constraints
+Dry run to assess complexity:
 
 ```sql
--- Dry run to assess complexity
 EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DatabaseName = 'SalesDB',
     @TableName = 'LargeOrders',
     @PartitionColumn = 'OrderDate',
     @NumberOfExistingPartitions = 24,
     @PreserveForeignKeys = 1,
-    @DryRun = 1
+    @DryRun = 1;
 ```
--- Check for foreign key complexity
+
+Check for foreign key complexity:
+
 ```sql
 SELECT COUNT(*) as FKCount
 FROM dbo.DryRunResults
 WHERE ExecutionID = 'your-execution-id'
-  AND StepName LIKE '%FOREIGN_KEY%'
+  AND StepName LIKE '%FOREIGN_KEY%';
 ```
-Scenario 2: Performance Critical Table
+
+### Scenario 2: Performance-Critical Table
+Dry run to estimate impact:
 
 ```sql
--- Dry run to estimate impact
 EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DatabaseName = 'SalesDB',
     @TableName = 'TransactionLog',
     @PartitionColumn = 'CreatedDate',
     @BatchSize = 50000,
-    @DryRun = 1
+    @DryRun = 1;
 ```
--- Get performance estimates
+
+Get performance estimates:
 
 ```sql
 SELECT 
@@ -150,23 +153,27 @@ SELECT
     EstimatedDurationSeconds,
     EstimatedRowCount
 FROM dbo.DryRunResults
-WHERE ExecutionID = 'your-execution-id'
-ORDER BY EstimatedDurationSeconds DESC
+WHERE EXECUTIONID = 'your-execution-id'
+ORDER BY EstimatedDurationSeconds DESC;
 ```
---- Scenario 3: Comparison of Different Configurations
+
+### Scenario 3: Comparison of Different Configurations
+Run dry runs with different partition intervals.
+
+-- Configuration 1: Monthly
 
 ```sql
--- Run dry run with different partition intervals
--- Configuration 1: Monthly
 EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DatabaseName = 'SalesDB',
     @TableName = 'Orders',
     @PartitionColumn = 'OrderDate',
     @PartitionInterval = 1,
-    @DryRun = 1
+    @DryRun = 1;
 ```
+
 -- Configuration 2: Quarterly
-``` sql
+
+```sql
 EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DatabaseName = 'SalesDB',
     @TableName = 'Orders',
@@ -175,72 +182,30 @@ EXEC DBADB.dbo.sp_ConvertToPartitionedTable
     @DryRun = 1;
 ```
 
-SQL Server Partitioning System - Key Capabilities & Benefits
+## Key Capabilities
 
-🎯 Key Capabilities
-📋 Complete Preview
-Shows every step before execution, giving you full transparency of the entire partitioning process.
+- Complete Preview: Shows every step before execution.
+- Time Estimation: Provides duration estimates based on data size.
+- SQL Preview: Displays actual SQL that will be executed.
+- Warning Detection: Identifies potential issues.
+- Multiple Output Formats: TABLE, XML, JSON.
+- Persistent Results: Stores results for later review.
+- Comparison Tools: Compare dry run estimates with actual execution.
 
-⏱️ Time Estimation
-Provides duration estimates based on data size, helping you plan maintenance windows effectively.
+## Benefits
 
-🔍 SQL Preview
-Displays actual SQL that will be executed, allowing you to review and validate the exact operations.
+- Risk Reduction: Understand impact before making changes.
+- Planning: Better resource and time planning.
+- Validation: Verify approach before execution.
+- Documentation: Record of expected outcomes.
+- Troubleshooting: Identify issues early.
+- Education: Learn about the partitioning process.
 
-⚠️ Warning Detection
-Identifies potential issues before they occur, preventing surprises during execution.
+## Use Cases
 
-📊 Multiple Output Formats
-Supports TABLE, XML, and JSON formats for flexible integration with various tools and reporting needs.
-
-💾 Persistent Results
-Stores results for later review, enabling historical analysis and audit trails.
-
-📈 Comparison Tools
-Compare dry run estimates with actual execution to refine future predictions and optimize performance.
-
-✨ Benefits
-🛡️ Risk Reduction
-Understand the complete impact before making changes, minimizing production risks.
-
-📅 Better Planning
-Improved resource allocation and time management through accurate estimates.
-
-✅ Validation
-Verify your approach and configuration before committing to execution.
-
-📝 Documentation
-Automatic record of expected outcomes, creating valuable project documentation.
-
-🔧 Troubleshooting
-Identify issues early in the process, reducing debugging time during actual execution.
-
-📚 Education
-Learn about the partitioning process through detailed step-by-step previews.
-
-💼 Use Cases
-🏢 Production Migration
-Validate and plan before making changes to production environments, ensuring smooth transitions.
-
-⚡ Performance Testing
-Estimate time and resource requirements for different scenarios and data volumes.
-
-🔄 Configuration Testing
-Compare different partitioning approaches and configurations side by side.
-
-📋 Audit Trail
-Document planned changes with comprehensive execution plans and estimates.
-
-👥 Team Review
-Share detailed execution plans with team members for collaborative review and approval.
-
-📊 Capacity Planning
-Estimate resource requirements and storage needs for future growth.
-
-🎨 Quick Reference
-Feature	Benefit	Use Case
-🔍 Complete Preview	🛡️ Risk Reduction	🏢 Production Migration
-⏱️ Time Estimation	📅 Better Planning	⚡ Performance Testing
-📊 Multiple Formats	📝 Documentation	👥 Team Review
-⚠️ Warning Detection	🔧 Troubleshooting	🔄 Configuration Testing
-💾 Persistent Results	📋 Audit Trail	📊 Capacity Planning
+- Production Migration: Validate before making changes.
+- Performance Testing: Estimate time and resources.
+- Configuration Testing: Compare different approaches.
+- Audit Trail: Document planned changes.
+- Team Review: Share plans with team members.
+- Capacity Planning: Estimate resource requirements.
